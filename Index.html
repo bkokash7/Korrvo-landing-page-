@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Korrvox — Hide It in Your Heart</title>
+<meta name="description" content="Korrvox is a scripture memorization app built around the power of your own voice. Record verses, loop them as you sleep, and carry the Word wherever you go."/>
+<meta name="theme-color" content="#0a0c1a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:     #0a0c1a;
+  --bg2:    #10132a;
+  --bg3:    #181b30;
+  --card:   #13162b;
+  --border: rgba(255,255,255,0.08);
+  --gold:   #c9a84c;
+  --blue:   #4f6ef7;
+  --purple: #7b5ea7;
+  --text:   #f0f0f8;
+  --t2:     #c0c0d0;
+  --t3:     #8a8aaa;
+  --t4:     #56566a;
+  --t5:     #2e2e42;
+  --r:      14px;
+}
+
+/* ═══════════════════════════════════════
+RESET + BASE
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+background:var(–bg);color:var(–text);
+font-family:‘DM Sans’,sans-serif;font-weight:300;
+line-height:1.7;overflow-x:hidden;
+-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ═══════════════════════════════════════
+NAV — mobile first
+═══════════════════════════════════════ */
+nav{
+position:fixed;top:0;left:0;right:0;z-index:900;
+height:58px;display:flex;align-items:center;
+justify-content:space-between;padding:0 20px;
+background:rgba(10,12,26,0.92);
+backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border-bottom:1px solid var(–border);
+}
+.nav-logo{
+font-family:‘Cinzel’,serif;font-size:14px;font-weight:700;
+letter-spacing:.3em;color:var(–gold);cursor:pointer;
+}
+.nav-links{display:none}
+.ham{
+display:flex;flex-direction:column;gap:5px;
+cursor:pointer;background:none;border:none;padding:6px;
+}
+.ham span{
+display:block;width:22px;height:1.5px;
+background:var(–t3);border-radius:2px;transition:all .25s;
+}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* Mobile drawer */
+.mob-menu{
+display:none;position:fixed;
+top:58px;left:0;right:0;z-index:899;
+background:rgba(10,12,26,0.97);
+backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border-bottom:1px solid var(–border);
+padding:6px 0 16px;
+}
+.mob-menu.open{display:block}
+.mob-menu a{
+display:block;padding:14px 28px;font-size:15px;
+color:var(–t3);border-bottom:1px solid rgba(255,255,255,.04);
+transition:color .15s;
+}
+.mob-menu a:hover,.mob-menu a.active{color:var(–gold)}
+.mob-menu a:last-child{border-bottom:none}
+
+/* Desktop nav */
+@media(min-width:720px){
+nav{padding:0 40px}
+.nav-logo{font-size:15px}
+.nav-links{
+display:flex;gap:4px;list-style:none;align-items:center;
+}
+.nav-links a{
+color:var(–t3);font-size:13px;font-weight:400;
+letter-spacing:.03em;padding:7px 13px;border-radius:7px;
+cursor:pointer;transition:color .15s,background .15s;
+}
+.nav-links a:hover{color:var(–text);background:rgba(255,255,255,.05)}
+.nav-links a.active{color:var(–gold)}
+.nav-cta{background:var(–blue)!important;color:#fff!important;margin-left:6px;font-weight:500!important}
+.nav-cta:hover{background:#3d5de0!important}
+.ham{display:none}
+}
+
+/* ═══════════════════════════════════════
+PAGE SYSTEM
+═══════════════════════════════════════ */
+.page{display:none}
+.page.active{display:block;animation:rise .3s ease}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════
+SHARED LAYOUT
+═══════════════════════════════════════ */
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+@media(min-width:720px){.wrap{padding:0 40px}}
+
+.lbl{
+font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+color:var(–gold);margin-bottom:12px;opacity:.9;
+}
+h2{
+font-family:‘Cinzel’,serif;
+font-size:clamp(24px,6vw,44px);
+font-weight:600;letter-spacing:.05em;
+color:var(–text);line-height:1.2;margin-bottom:16px;
+}
+.intro{
+font-family:‘Lora’,serif;
+font-size:clamp(15px,2.5vw,19px);
+color:var(–t3);line-height:1.9;
+max-width:580px;margin-bottom:44px;
+}
+.vdiv{
+width:1px;height:60px;
+background:linear-gradient(to bottom,rgba(201,168,76,.4),transparent);
+margin:0 auto 64px;
+}
+
+.btn{
+display:inline-flex;align-items:center;gap:8px;
+background:var(–blue);color:#fff;border:none;
+padding:14px 34px;border-radius:10px;
+font-family:‘DM Sans’,sans-serif;
+font-size:15px;font-weight:500;
+cursor:pointer;transition:background .15s,transform .15s;
+}
+.btn:hover{background:#3d5de0;transform:translateY(-1px)}
+.btn-ghost{
+background:transparent;border:1px solid rgba(255,255,255,.14);
+color:var(–t2);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.22)}
+
+/* ═══════════════════════════════════════
+HERO
+═══════════════════════════════════════ */
+.hero{
+min-height:100svh;
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;
+text-align:center;padding:90px 20px 72px;
+position:relative;overflow:hidden;
+}
+.hero-glow{
+position:absolute;inset:0;pointer-events:none;
+background:
+radial-gradient(ellipse 80% 55% at 50% 28%,rgba(201,168,76,.07) 0%,transparent 65%),
+radial-gradient(ellipse 40% 38% at 85% 82%,rgba(79,110,247,.06) 0%,transparent 55%),
+radial-gradient(ellipse 30% 30% at 12% 68%,rgba(123,94,167,.05) 0%,transparent 55%);
+}
+.hero-eye{
+font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+color:var(–gold);margin-bottom:20px;opacity:.8;
+}
+.hero-wordmark{
+font-family:‘Cinzel’,serif;
+font-size:clamp(56px,18vw,128px);
+font-weight:700;letter-spacing:.32em;
+color:var(–gold);line-height:1;margin-bottom:10px;
+text-shadow:0 0 100px rgba(201,168,76,.22);
+}
+.hero-tagline{
+font-family:‘Lora’,serif;font-style:italic;
+font-size:clamp(14px,3vw,20px);
+color:var(–t3);letter-spacing:.14em;margin-bottom:44px;
+}
+.hero-h{
+font-family:‘Lora’,serif;
+font-size:clamp(18px,3.5vw,26px);
+color:var(–text);font-weight:400;
+max-width:520px;line-height:1.6;margin-bottom:12px;
+}
+.hero-p{
+font-size:15px;color:var(–t3);
+max-width:400px;line-height:1.85;margin-bottom:44px;
+}
+.pills{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:32px}
+.pill{
+background:var(–bg3);border:1px solid var(–border);
+color:var(–t3);font-size:12px;letter-spacing:.05em;
+padding:5px 15px;border-radius:100px;
+}
+.pill b{color:var(–t2);font-weight:500}
+.scroll-hint{
+position:absolute;bottom:26px;
+display:flex;flex-direction:column;align-items:center;gap:7px;
+color:var(–t5);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+animation:bob 3s ease-in-out infinite;
+}
+.scroll-hint::after{content:’’;width:1px;height:30px;background:linear-gradient(to bottom,var(–t5),transparent)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ═══════════════════════════════════════
+SCREENSHOTS
+═══════════════════════════════════════ */
+.ss-wrap{padding:72px 0;text-align:center;overflow:hidden}
+.ss-head{max-width:520px;margin:0 auto 52px;padding:0 20px}
+.ss-head p{font-family:‘Lora’,serif;font-size:16px;color:var(–t3);line-height:1.8;margin-top:10px}
+.ss-row{
+display:flex;gap:16px;justify-content:center;align-items:flex-end;
+overflow-x:auto;padding:0 20px 8px;
+-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.ss-row::-webkit-scrollbar{display:none}
+.ss-item{flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+.phone{
+background:var(–bg2);border:1px solid rgba(255,255,255,.09);
+border-radius:32px;padding:11px 9px 16px;
+box-shadow:0 32px 72px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.notch{width:52px;height:5px;background:var(–bg);border-radius:3px;margin:0 auto 9px}
+.phone img{border-radius:20px;display:block;width:100%}
+.ss-cap{margin-top:11px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(–t4)}
+
+/* ═══════════════════════════════════════
+FEATURE GRID
+═══════════════════════════════════════ */
+.fg{
+display:grid;grid-template-columns:1fr;
+gap:1px;background:var(–border);
+border:1px solid var(–border);border-radius:var(–r);overflow:hidden;
+margin-bottom:56px;
+}
+@media(min-width:560px){.fg{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:860px){.fg{grid-template-columns:repeat(3,1fr)}}
+.fc{background:var(–card);padding:30px 26px;transition:background .2s}
+.fc:hover{background:var(–bg3)}
+.fc-bar{width:3px;height:22px;border-radius:2px;margin-bottom:14px}
+.fc-title{
+font-family:‘Cinzel’,serif;font-size:11px;
+letter-spacing:.14em;text-transform:uppercase;
+color:var(–gold);margin-bottom:8px;
+}
+.fc-body{font-size:14px;color:var(–t3);line-height:1.8}
+
+/* ═══════════════════════════════════════
+CALLOUT BLOCK
+═══════════════════════════════════════ */
+.callout{
+padding:72px 20px;text-align:center;
+background:linear-gradient(180deg,var(–bg2),var(–bg3));
+border-top:1px solid var(–border);border-bottom:1px solid var(–border);
+position:relative;overflow:hidden;
+}
+.callout::before{
+content:’’;position:absolute;inset:0;pointer-events:none;
+background:radial-gradient(ellipse 55% 80% at 50% 50%,rgba(79,110,247,.06),transparent);
+}
+.callout h2{position:relative;margin-bottom:12px}
+.callout p{
+font-family:‘Lora’,serif;font-size:18px;color:var(–t3);
+max-width:400px;margin:0 auto 36px;line-height:1.75;position:relative;
+}
+
+/* ═══════════════════════════════════════
+QUOTE
+═══════════════════════════════════════ */
+.qwrap{max-width:660px;margin:0 auto;padding:80px 24px;text-align:center}
+.qwrap blockquote{
+font-family:‘Lora’,serif;font-style:italic;
+font-size:clamp(16px,2.8vw,22px);
+color:var(–t2);line-height:1.8;margin-bottom:24px;
+position:relative;padding:0 8px;
+}
+.qwrap blockquote::before{
+content:’\201C’;position:absolute;top:-36px;left:-6px;
+font-size:90px;color:var(–gold);opacity:.12;
+font-family:‘Lora’,serif;line-height:1;
+}
+.qattr{font-size:12px;color:var(–t4);letter-spacing:.05em;line-height:1.9}
+
+/* ═══════════════════════════════════════
+FEATURES PAGE
+═══════════════════════════════════════ */
+.phead{
+padding:110px 20px 48px;text-align:center;
+max-width:680px;margin:0 auto;
+}
+.fblock{max-width:860px;margin:0 auto;padding:0 20px 56px}
+@media(min-width:720px){.fblock{padding:0 40px 56px}}
+.fbhead{
+font-family:‘Cinzel’,serif;font-size:11px;
+letter-spacing:.22em;text-transform:uppercase;
+color:var(–gold);padding-bottom:12px;
+border-bottom:1px solid var(–border);margin-bottom:20px;
+}
+.frows{display:flex;flex-direction:column;gap:6px}
+.frow{
+display:flex;gap:14px;align-items:flex-start;
+padding:15px 18px;background:var(–card);
+border:1px solid var(–border);border-radius:8px;
+transition:background .15s;
+}
+.frow:hover{background:var(–bg3)}
+.frbar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:14px}
+.frtitle{font-size:14px;font-weight:500;color:var(–text);margin-bottom:3px}
+.frdesc{font-size:13px;color:var(–t3);line-height:1.75}
+
+/* ═══════════════════════════════════════
+HOW IT WORKS / MEMORIZATION PAGE
+═══════════════════════════════════════ */
+.article-wrap{max-width:720px;margin:0 auto;padding:110px 20px 80px}
+@media(min-width:720px){.article-wrap{padding:110px 40px 80px}}
+.article-wrap .lbl{display:block;margin-bottom:10px}
+.article-wrap h1{
+font-family:‘Cinzel’,serif;
+font-size:clamp(26px,5vw,40px);
+font-weight:600;letter-spacing:.06em;
+color:var(–gold);line-height:1.25;margin-bottom:6px;
+}
+.article-wrap .subtitle{
+font-family:‘Lora’,serif;font-style:italic;
+font-size:16px;color:var(–t3);margin-bottom:40px;
+}
+.article-section{margin-bottom:44px}
+.article-section h3{
+font-family:‘Cinzel’,serif;font-size:12px;
+letter-spacing:.18em;text-transform:uppercase;
+color:var(–gold);margin-bottom:12px;
+padding-bottom:10px;border-bottom:1px solid var(–border);
+}
+.article-section p{
+font-family:‘Lora’,serif;font-size:16px;
+color:var(–t2);line-height:1.95;margin-bottom:14px;
+}
+.article-section p:last-child{margin-bottom:0}
+.scripture{
+border-left:3px solid var(–gold);
+padding:14px 18px;margin:20px 0;
+background:rgba(201,168,76,.05);border-radius:0 8px 8px 0;
+}
+.scripture p{
+font-family:‘Lora’,serif;font-style:italic;
+font-size:15px;color:var(–t2);margin-bottom:4px;
+}
+.scripture cite{font-size:12px;color:var(–gold);font-style:normal;letter-spacing:.05em}
+.tip-box{
+background:var(–card);border:1px solid var(–border);
+border-radius:10px;padding:22px 20px;margin:28px 0;
+}
+.tip-box-title{
+font-family:‘Cinzel’,serif;font-size:10px;
+letter-spacing:.22em;text-transform:uppercase;
+color:var(–blue);margin-bottom:10px;
+}
+.tip-box p{font-family:‘DM Sans’,serif;font-size:14px;color:var(–t3);line-height:1.85;margin-bottom:10px}
+.tip-box p:last-child{margin-bottom:0}
+.tip-box ul{padding-left:18px;margin-top:6px}
+.tip-box ul li{font-size:14px;color:var(–t3);line-height:1.85;margin-bottom:6px}
+.article-closing{
+margin-top:52px;padding:28px 24px;
+background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(79,110,247,.06));
+border:1px solid rgba(201,168,76,.18);border-radius:var(–r);
+text-align:center;
+}
+.article-closing p{
+font-family:‘Lora’,serif;font-size:16px;color:var(–t2);line-height:1.9;margin-bottom:12px;
+}
+.article-closing .sig{font-size:13px;color:var(–gold);font-style:italic}
+
+/* ═══════════════════════════════════════
+PRIVACY / TERMS / ABOUT
+═══════════════════════════════════════ */
+.legal-wrap{max-width:700px;margin:0 auto;padding:110px 20px 80px}
+@media(min-width:720px){.legal-wrap{padding:110px 40px 80px}}
+.legal-wrap h1{
+font-family:‘Cinzel’,serif;
+font-size:clamp(24px,5vw,38px);
+letter-spacing:.08em;color:var(–gold);margin-bottom:6px;
+}
+.legal-eff{font-size:12px;color:var(–t4);margin-bottom:40px;letter-spacing:.04em}
+.hi-grid{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:8px;margin-bottom:44px;
+}
+.hi-item{
+background:var(–card);border:1px solid var(–border);
+border-radius:8px;padding:14px 15px;
+display:flex;gap:10px;align-items:flex-start;
+}
+.hi-check{color:var(–blue);font-size:13px;flex-shrink:0;margin-top:1px}
+.hi-text{font-size:13px;color:var(–t3);line-height:1.6}
+.legal-body h3{
+font-family:‘Cinzel’,serif;font-size:11px;
+letter-spacing:.15em;text-transform:uppercase;
+color:var(–gold);margin:32px 0 9px;
+}
+.legal-body p{font-size:14px;color:var(–t3);line-height:1.95;margin-bottom:10px}
+.legal-body a{color:var(–blue);cursor:pointer}
+
+/* ═══════════════════════════════════════
+CONTACT
+═══════════════════════════════════════ */
+.contact-wrap{max-width:520px;margin:0 auto;padding:110px 20px 80px;text-align:center}
+.contact-wrap h1{
+font-family:‘Cinzel’,serif;
+font-size:clamp(24px,5vw,38px);
+letter-spacing:.07em;color:var(–text);margin-bottom:10px;
+}
+.contact-wrap .csub{
+font-family:‘Lora’,serif;font-size:17px;color:var(–t3);
+line-height:1.8;margin-bottom:40px;
+}
+.cform{display:flex;flex-direction:column;gap:13px;text-align:left}
+.cform label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(–t4);display:block;margin-bottom:5px}
+.cform input,.cform textarea,.cform select{
+width:100%;background:var(–bg3);border:1px solid var(–border);
+border-radius:8px;padding:12px 15px;color:var(–text);
+font-family:‘DM Sans’,sans-serif;font-size:14px;
+outline:none;transition:border-color .15s;resize:vertical;
+-webkit-appearance:none;
+}
+.cform input::placeholder,.cform textarea::placeholder{color:var(–t5)}
+.cform input:focus,.cform textarea:focus,.cform select:focus{border-color:rgba(79,110,247,.5)}
+.cform select{color:var(–text);cursor:pointer}
+.cform select option{background:var(–bg2)}
+.cform textarea{min-height:110px}
+.send-btn{
+background:var(–blue);color:#fff;border:none;
+border-radius:8px;padding:13px 30px;
+font-family:‘DM Sans’,sans-serif;font-size:14px;font-weight:500;
+cursor:pointer;transition:background .15s;align-self:flex-start;
+}
+.send-btn:hover{background:#3d5de0}
+.form-success{
+display:none;padding:36px 20px;
+background:var(–bg3);border:1px solid var(–border);
+border-radius:10px;font-family:‘Lora’,serif;
+font-size:17px;color:var(–t3);text-align:center;line-height:1.75;
+}
+.contact-detail{
+margin-top:28px;padding:18px 20px;background:var(–card);
+border:1px solid var(–border);border-radius:8px;
+font-size:13px;color:var(–t3);line-height:1.9;text-align:left;
+}
+.contact-detail strong{color:var(–text);font-weight:500}
+.contact-detail a{color:var(–blue)}
+
+/* ═══════════════════════════════════════
+FOOTER
+═══════════════════════════════════════ */
+footer{
+border-top:1px solid var(–border);
+padding:48px 20px 32px;
+display:flex;flex-direction:column;align-items:center;
+gap:20px;text-align:center;
+}
+.footer-logo{font-family:‘Cinzel’,serif;font-size:13px;letter-spacing:.3em;color:var(–gold)}
+.footer-sub{font-family:‘Lora’,serif;font-style:italic;font-size:12px;color:var(–t4);margin-top:3px}
+.footer-nav{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
+.footer-nav a{
+font-size:12px;color:var(–t4);cursor:pointer;
+padding:5px 11px;border-radius:5px;transition:color .15s;
+}
+.footer-nav a:hover{color:var(–t2)}
+.footer-copy{font-size:11px;color:var(–t4);line-height:1.9;max-width:580px}
+.footer-seven{font-size:10px;color:var(–t5);letter-spacing:.05em;margin-top:4px}
+
+@media(min-width:720px){
+footer{padding:52px 40px 36px}
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav>
+  <span class="nav-logo" onclick="go('home')">KORRVOX</span>
+  <ul class="nav-links">
+    <li><a onclick="go('home')" id="nl-home">Home</a></li>
+    <li><a onclick="go('features')" id="nl-features">Features</a></li>
+    <li><a onclick="go('how')" id="nl-how">How It Works</a></li>
+    <li><a onclick="go('about')" id="nl-about">About</a></li>
+    <li><a onclick="go('privacy')" id="nl-privacy">Privacy</a></li>
+    <li><a onclick="go('contact')" id="nl-contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <button class="ham" id="ham" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mob-menu" id="mob">
+  <a onclick="go('home')" id="mn-home">Home</a>
+  <a onclick="go('features')" id="mn-features">Features</a>
+  <a onclick="go('how')" id="mn-how">How It Works</a>
+  <a onclick="go('about')" id="mn-about">About</a>
+  <a onclick="go('privacy')" id="mn-privacy">Privacy</a>
+  <a onclick="go('terms')" id="mn-terms">Terms</a>
+  <a onclick="go('contact')" id="mn-contact">Contact</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     HOME
+══════════════════════════════════════ -->
+
+<div id="p-home" class="page">
+
+  <!-- Hero -->
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <p class="hero-eye">Scripture Memorization App</p>
+    <h1 class="hero-wordmark">KORRVOX</h1>
+    <p class="hero-tagline">hide it in your heart</p>
+    <p class="hero-h">Memorize scripture through the power of your own voice.</p>
+    <p class="hero-p">Record yourself reading any verse. Loop it back continuously — while you commute, work out, or fall asleep. The Word, becoming native to your life.</p>
+    <div class="pills">
+      <span class="pill">iPhone &amp; iPad</span>
+      <span class="pill"><b>One-time purchase</b></span>
+      <span class="pill">No subscriptions</span>
+      <span class="pill">KJV &amp; ASV included</span>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <button class="btn" onclick="go('features')">Explore Features</button>
+      <button class="btn btn-ghost" onclick="go('how')">How It Works</button>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </div>
+
+  <!-- Screenshots -->
+
+  <div class="ss-wrap">
+    <div class="ss-head">
+      <div class="lbl">The App</div>
+      <h2>Designed for the quiet hours.</h2>
+      <p>Dark by default. Clean and focused. Built entirely on Apple's native frameworks — no clutter, no noise, just the Word.</p>
+    </div>
+    <div class="ss-row">
+      <div class="ss-item" style="width:155px">
+        <div class="phone">
+          <div class="notch"></div>
+          <img src="https://placehold.co/310x620/10132a/4f6ef7?text=Memory+Cards" alt="Memory card list"/>
+        </div>
+        <p class="ss-cap">Memory Cards</p>
+      </div>
+      <div class="ss-item" style="width:175px">
+        <div class="phone">
+          <div class="notch"></div>
+          <img src="https://placehold.co/350x700/10132a/c9a84c?text=Voice+Looping" alt="Voice looping"/>
+        </div>
+        <p class="ss-cap">Voice Looping</p>
+      </div>
+      <div class="ss-item" style="width:155px">
+        <div class="phone">
+          <div class="notch"></div>
+          <img src="https://placehold.co/310x620/10132a/7b5ea7?text=Sleep+Looper" alt="Sleep looper"/>
+        </div>
+        <p class="ss-cap">Sleep Looper</p>
+      </div>
+      <div class="ss-item" style="width:155px">
+        <div class="phone">
+          <div class="notch"></div>
+          <img src="https://placehold.co/310x620/10132a/4f6ef7?text=Built-in+Bible" alt="Built-in Bible"/>
+        </div>
+        <p class="ss-cap">Built-in Bible</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="vdiv"></div>
+
+  <!-- Core features -->
+
+  <section style="padding:0 0 80px">
+    <div class="wrap">
+      <div style="text-align:center;margin-bottom:44px">
+        <div class="lbl">What's Inside</div>
+        <h2 style="max-width:500px;margin:0 auto 0">Essential Features</h2>
+      </div>
+      <div class="fg">
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--gold)"></div>
+          <div class="fc-title">Your Voice, on Loop</div>
+          <p class="fc-body">Record yourself reading any verse. Loop it continuously with a customizable silence gap. Hearing your own voice accelerates memorization faster than reading alone.</p>
+        </div>
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--purple)"></div>
+          <div class="fc-title">Sleep Looper</div>
+          <p class="fc-body">Fall asleep to scripture. Set a timer, layer background sounds — rain, ocean, white noise, forest — and let the Word wash over you as you drift off.</p>
+        </div>
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--blue)"></div>
+          <div class="fc-title">Built-in Bible</div>
+          <p class="fc-body">Full KJV and ASV, offline, always. Browse, search, tap any verse, and create a memory card in seconds.</p>
+        </div>
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--gold)"></div>
+          <div class="fc-title">Memory Games</div>
+          <p class="fc-body">First Letters mode shows only the first letter of each word. Peek-a-Boo hides the text until you drag to reveal. Practice until it's yours.</p>
+        </div>
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--blue)"></div>
+          <div class="fc-title">Sequencer Playlists</div>
+          <p class="fc-body">String cards into a playlist. Loop them in sequence on your commute, your walk, your quiet time. Build a repertoire.</p>
+        </div>
+        <div class="fc">
+          <div class="fc-bar" style="background:var(--purple)"></div>
+          <div class="fc-title">Completely Private</div>
+          <p class="fc-body">No analytics. No third-party SDKs. Your cards and recordings live on your device. Even iCloud sync is optional.</p>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--t4)">
+        <a onclick="go('features')" style="color:var(--blue);cursor:pointer">View the full feature list →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Callout -->
+
+  <div class="callout">
+    <h2>One purchase. No subscriptions.</h2>
+    <p>No subscriptions. No tiers. No upsells. Korrvox is a one-time purchase — the way apps used to be.</p>
+    <button class="btn" onclick="go('contact')">Get in Touch</button>
+  </div>
+
+  <!-- Quote -->
+
+  <div class="qwrap">
+    <blockquote>"I have laid up thy word in my heart, that I might not sin against thee."</blockquote>
+    <p class="qattr">Psalm 119:11 — American Standard Version<br><br>
+    Korrvox was built for one purpose: to help you hide the Word in your heart.</p>
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. Korrvox is a trademark of Seven Kilo Enterprises LLC.<br>
+    Apple, iPhone, iPad, iCloud, and App Store are trademarks of Apple Inc.<br>
+    The King James Version (KJV) and American Standard Version (ASV) are in the public domain.</p>
+    <p class="footer-seven">A product of Seven Kilo Enterprises LLC</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     FEATURES
+══════════════════════════════════════ -->
+
+<div id="p-features" class="page">
+  <div class="phead">
+    <div class="lbl">Full Feature List</div>
+    <h2>Built to help you remember.</h2>
+    <p class="intro" style="margin:0 auto">Every feature exists to serve one purpose — help you carry the Word wherever you go.</p>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Memory Cards</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Add any text to memorize</div><div class="frdesc">Type or paste verses, quotes, or any content you want to carry with you.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Titles, tags &amp; collapsible sections</div><div class="frdesc">Give each card a title and organize with tags. Cards group by tag with collapsible sections so your library stays clean.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Instant search</div><div class="frdesc">Find any card instantly by title, content, or tag.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">iCloud sync</div><div class="frdesc">Cards sync automatically across all your Apple devices through your personal iCloud account.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Voice &amp; Audio</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Record your own voice</div><div class="frdesc">Record yourself reading any card and loop it back continuously — the foundation of the whole app.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Text-to-speech option</div><div class="frdesc">No recording? The built-in system voice reads and loops any card aloud.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Adjustable silence gap</div><div class="frdesc">Set a 0–60 second pause between loops. Try matching the gap to your recording length — it creates a natural listen → recite → listen rhythm.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Playback speed control</div><div class="frdesc">Listen at 1x, 1.2x, 1.5x, 1.8x, or 2x — whatever pace helps you most.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Plays with screen locked</div><div class="frdesc">Audio continues when your screen locks. Put your phone down and keep listening.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Read title before each loop</div><div class="frdesc">Optionally announce the card title before each repetition.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Memory Games</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">First Letters mode</div><div class="frdesc">Only the first letter of each word is shown. Recite from memory, then reveal to check yourself.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Peek-a-Boo mode</div><div class="frdesc">Text is hidden behind a blur. Drag your finger to reveal it one section at a time.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Sequencer</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Create playlists of cards</div><div class="frdesc">Select multiple cards and play them in sequence — your own scripture playlist.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Loop All or Repeat Each</div><div class="frdesc">Loop the full playlist continuously, or repeat each card a set number of times before advancing.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Full playback controls</div><div class="frdesc">Adjustable gap between cards, speed control, and optional title announcement.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Sleep Looper</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Sleep timer with gentle fade</div><div class="frdesc">15 min, 30 min, 45 min, 1 hr, 1.5 hr, or custom. Audio fades out gently — no jarring stop.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">7 background sounds</div><div class="frdesc">White Noise, Brown Noise, Fan, Rain, Ocean, Forest, or Classical — layered beneath your voice.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Independent volume controls</div><div class="frdesc">Balance your voice recording and background sound levels separately.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--purple)"></div><div><div class="frtitle">Live clock display</div><div class="frdesc">A live clock shows while playing, in both portrait and landscape orientations.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Built-in Bible</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">KJV and ASV included</div><div class="frdesc">Both translations offline, forever, at no extra cost. Both are in the public domain.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Browse or search</div><div class="frdesc">Browse by book and chapter, or search any keyword or reference like "John 3:16" or "fear not".</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--gold)"></div><div><div class="frtitle">Tap to create a memory card</div><div class="frdesc">Tap any verse — or select a range — and create a memory card instantly.</div></div></div>
+    </div>
+  </div>
+
+  <div class="fblock">
+    <div class="fbhead">Settings &amp; Customization</div>
+    <div class="frows">
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Dark, light, or system mode</div><div class="frdesc">Choose your preferred appearance or follow your device's system setting.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Adjustable text size &amp; font</div><div class="frdesc">Slider from 12 to 24pt. Choose from Default, Georgia, Courier New, or Helvetica Neue.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">iPad support</div><div class="frdesc">Two-column layout on iPad — card list on the left, card detail on the right.</div></div></div>
+      <div class="frow"><div class="frbar" style="background:var(--blue)"></div><div><div class="frtitle">Built with Apple native frameworks only</div><div class="frdesc">SwiftUI, SwiftData, AVFoundation, CloudKit. Zero third-party SDKs or trackers.</div></div></div>
+    </div>
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════ -->
+
+<div id="p-how" class="page">
+  <div class="article-wrap">
+    <span class="lbl">A Note from the Creator</span>
+    <h1>Writing It on the Heart</h1>
+    <p class="subtitle">A word on why scripture memorization matters more now than ever — and how to actually do it.</p>
+
+```
+<div class="article-section">
+  <h3>The Challenge</h3>
+  <p>Let me be honest with you. We live in a world where the entire Bible is three taps away. You can search any verse in seconds, pull up a passage mid-conversation, and have a dozen translations side by side before the thought is even fully formed.</p>
+  <p>That's a miracle of access. And it has quietly become one of the greatest threats to the deep work of scripture memorization.</p>
+  <p>Because access is not the same as formation. A verse you can find in ten seconds is not a verse written on your heart. It's a verse stored on a server.</p>
+</div>
+
+<div class="article-section">
+  <h3>What the Word Says</h3>
+  <div class="scripture">
+    <p>"These words, which I command thee this day, shall be upon thy heart: and thou shalt teach them diligently unto thy children, and shalt talk of them when thou sittest in thy house, and when thou walkest by the way, and when thou liest down, and when thou risest up."</p>
+    <cite>Deuteronomy 6:6–7 — ASV</cite>
+  </div>
+  <p>Total immersion. Not a discipline slot. Not a morning habit. A way of life. The Word woven into every ordinary moment — sitting, walking, lying down, rising. This was the design from the beginning.</p>
+  <div class="scripture">
+    <p>"Let the word of Christ dwell in you richly."</p>
+    <cite>Colossians 3:16 — ASV</cite>
+  </div>
+  <p>Not visit occasionally. Not be accessible nearby. <em>Dwell. Richly.</em> That word — richly — implies abundance, depth, fullness. This is not a verse-a-week program. It's a life saturated with the Word of God.</p>
+  <div class="scripture">
+    <p>"Thy word have I laid up in my heart, that I might not sin against thee."</p>
+    <cite>Psalm 119:11 — ASV</cite>
+  </div>
+</div>
+
+<div class="article-section">
+  <h3>Not Memorization — Formation</h3>
+  <p>This is the critical distinction. Memorization is mechanical. Writing on the heart is transformation.</p>
+  <p>The goal isn't storage — it's formation. The goal is automatic recall at the right moment. Not a trivia answer, but a living word that rises in your spirit when fear hits, when temptation comes, when someone needs truth spoken over them. That's a fundamentally different kind of remembering. Less like retrieving a file, and more like a reflex — the Word already in you, surfacing because it's been cultivated there.</p>
+  <p>Proverbs 7:3 says "bind them on your fingers; write them on the tablet of your heart." This isn't academic retention. It's the Word becoming native to your inner life — woven into how you perceive, respond, feel, and decide.</p>
+</div>
+
+<div class="article-section">
+  <h3>The Athlete Analogy</h3>
+  <p>"For bodily exercise is profitable for a little; but godliness is profitable for all things." — 1 Timothy 4:8 (ASV)</p>
+  <p>The athletic parallel is exactly right. A basketball player doesn't practice free throws so they can perform them in practice — they practice so that when the game is on the line, under pressure, with noise and stakes and exhaustion, the motion is already in the body. It happens without thinking.</p>
+  <p>Scripture memorization is spiritual conditioning for the same reason. You don't hide the Word in your heart during the moment of temptation — you hide it before, in the quiet, through discipline and repetition and meditation, so that when the moment comes, the Spirit has something to work with.</p>
+  <p>Jesus himself modeled this in the wilderness. Every answer to Satan was "It is written." He didn't search for an answer. The Word was already there.</p>
+</div>
+
+<div class="article-section">
+  <h3>How Your Brain Works With You</h3>
+  <p>Scripture memorization draws on multiple memory systems at once. There's the meaning and theology of a passage. There's the personal moment you first clung to it — a trial, a sermon, a season where that verse was all you had. And there's the rhythm of the words themselves, so familiar they begin to flow without effort, like breathing.</p>
+  <p>The more you return to a verse with understanding, emotion, and reverence, the stronger and more automatic the mental pathway becomes. The emotion and personal context attached to a verse — the time you held onto Romans 8:28 in grief, or Philippians 4:13 in failure — are what convert short-term memorization into lifelong recall.</p>
+  <p>That's not just how the brain works. That's the design of a God who told his people to speak these words morning and evening, to bind them to their wrists and foreheads. He knew what he was building.</p>
+</div>
+
+<div class="article-section">
+  <h3>The Digital Age Problem</h3>
+  <p>Researchers call it "cognitive offloading" — the habit of letting your devices remember things so your brain doesn't have to. It works brilliantly for phone numbers, directions, and trivia. It fails entirely for spiritual formation.</p>
+  <p>The "Google Effect" has trained a generation to externalize recall. Why retain something when you can look it up? But that posture is exactly backwards for the work of the Word dwelling in you. You cannot outsource sanctification. The Word that transforms you is the Word that lives in you — not the verse you pull up when you need it.</p>
+  <p>We are not less capable of memorization than people in previous generations. We are simply less practiced. Our mental energy is being redirected constantly toward consumption, scroll, and stimulus. The discipline of sitting with one verse — returning to it again and again — runs entirely against the current of modern life. That's exactly why it's worth doing.</p>
+</div>
+
+<div class="article-section">
+  <h3>Practical Method — How to Use Korrvox Well</h3>
+  <div class="tip-box">
+    <div class="tip-box-title">💡 Tips for Effective Memorization</div>
+    <p><strong style="color:var(--t2)">The Listen → Recite Method</strong><br>
+    Set the silence gap in Korrvox to match the length of your recording. This creates a natural rhythm: listen to your voice read the verse, then use the gap to recite it out loud yourself. Listen. Recite. Listen. Recite. This back-and-forth is more powerful than passive listening alone — your brain is actively retrieving, not just receiving.</p>
+    <p><strong style="color:var(--t2)">The 10 &amp; 10 Method</strong><br>
+    Especially helpful in the early stages: read or listen to the verse 10 times straight. Then close your eyes and recite it out loud 10 times. Don't move to a new verse until you've put in the reps on this one. Repetition isn't failure — it's the work.</p>
+    <p><strong style="color:var(--t2)">Use the Sleep Looper</strong><br>
+    Your brain continues processing during sleep. Looping scripture as you fall asleep isn't a shortcut — it's an additional layer of immersion. Layer a soft background sound, set your timer, and let the Word be the last thing you hear.</p>
+    <ul>
+      <li>Start with one verse at a time. Depth beats breadth.</li>
+      <li>Speak it out loud — your voice engages more of your brain than silent reading.</li>
+      <li>Attach meaning to the verse. Why does it matter to you? That emotion becomes an anchor.</li>
+      <li>Return to the same verse across days and weeks. Repetition builds permanence.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="article-closing">
+  <p>Thank you for downloading Korrvox. Building this app has been an act of faith — a belief that the people of God still want the Word written on their hearts, not just stored in their pockets.</p>
+  <p>You are swimming upstream. In a world of infinite distraction, choosing to sit with one verse — to record it, loop it, return to it — is a countercultural act of devotion. Don't underestimate what God does with that kind of faithfulness over time.</p>
+  <p>"Be strong and courageous… for Jehovah thy God is with thee whithersoever thou goest." — Joshua 1:9 (ASV)</p>
+  <p>Now go hide the Word in your heart.<br>It belongs there.</p>
+  <p class="sig">— The Creator of Korrvox</p>
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABOUT
+══════════════════════════════════════ -->
+
+<div id="p-about" class="page">
+  <div class="legal-wrap">
+    <span class="lbl">About</span>
+    <h1>About Korrvox</h1>
+    <p class="legal-eff">Seven Kilo Enterprises LLC &nbsp;·&nbsp; info@korrvox.com</p>
+
+```
+<div class="legal-body">
+  <h3>The App</h3>
+  <p>Korrvox is a scripture memorization aid built for iPhone and iPad. It is designed around a single insight: hearing your own voice recite a verse is one of the most effective memorization tools available — and almost nobody uses it.</p>
+  <p>Korrvox makes it simple. Record yourself reading any verse. Loop it back continuously while you commute, exercise, or fall asleep. Add the full KJV or ASV from the built-in Bible in seconds. Use memory games to test yourself. Build playlists of verses and work through them in sequence. Let the Sleep Looper carry the Word into your rest.</p>
+
+  <h3>The Developer</h3>
+  <p>Korrvox is developed and maintained by Seven Kilo Enterprises LLC, a small independent software company. It is built entirely with Apple's native frameworks — SwiftUI, SwiftData, AVFoundation, and CloudKit — with no third-party SDKs, no analytics, and no advertising.</p>
+
+  <h3>Bible Translations</h3>
+  <p><strong style="color:var(--t2)">King James Version (KJV)</strong><br>
+  First published in 1611. The KJV is in the public domain in the United States. The text included in Korrvox is sourced from public domain databases.</p>
+  <p><strong style="color:var(--t2)">American Standard Version (ASV)</strong><br>
+  Published in 1901. The ASV is in the public domain. The text included in Korrvox is sourced from public domain databases.</p>
+  <p>Users may type or paste text from any source into Korrvox memory cards. Users are responsible for their own compliance with any applicable copyright restrictions for text they enter manually.</p>
+
+  <h3>Contact</h3>
+  <p>Questions, feedback, or support requests:<br>
+  <a href="mailto:info@korrvox.com">info@korrvox.com</a></p>
+  <p><a onclick="go('contact')" style="color:var(--blue);cursor:pointer">Or use the contact form →</a></p>
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRIVACY
+══════════════════════════════════════ -->
+
+<div id="p-privacy" class="page">
+  <div class="legal-wrap">
+    <span class="lbl">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p class="legal-eff">Effective Date: 2026 &nbsp;·&nbsp; Seven Kilo Enterprises LLC &nbsp;·&nbsp; info@korrvox.com</p>
+    <div class="hi-grid">
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">Zero personal data collected</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">No login required</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">No ads, no analytics, no trackers</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">Voice recordings stored locally only</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">iCloud sync governed by Apple</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">Safe for all ages</p></div>
+    </div>
+    <div class="legal-body">
+      <h3>Information We Collect</h3>
+      <p>Korrvox does not collect, transmit, or store any personal information on our servers. All content you create — including memory cards, voice recordings, and settings — is stored locally on your device and, if enabled, synced through your personal iCloud account governed by Apple's Privacy Policy.</p>
+
+```
+  <h3>Microphone Access</h3>
+  <p>Korrvox requests access to your device microphone solely to enable you to record your own voice for use within the app. These recordings are stored only on your device and are never transmitted to us or any third party.</p>
+
+  <h3>iCloud</h3>
+  <p>If you have iCloud enabled, your app data may sync across your Apple devices through Apple's iCloud service. This sync is governed by Apple's Privacy Policy. We have no access to your iCloud data.</p>
+
+  <h3>No Third-Party Sharing</h3>
+  <p>We do not sell, trade, or share any data with third parties. We do not use advertising networks, analytics services, or any third-party data collection tools of any kind.</p>
+
+  <h3>Children's Privacy</h3>
+  <p>Korrvox does not collect personal information from anyone, including children under the age of 13. The app contains no data collection mechanisms whatsoever.</p>
+
+  <h3>Changes to This Policy</h3>
+  <p>We may update this Privacy Policy from time to time. Changes will be posted at korrvox.com. Continued use of the app constitutes acceptance of the updated policy.</p>
+
+  <h3>Contact</h3>
+  <p><a href="mailto:info@korrvox.com">info@korrvox.com</a> &nbsp;·&nbsp; <a onclick="go('contact')" style="cursor:pointer">Contact form →</a></p>
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     TERMS
+══════════════════════════════════════ -->
+
+<div id="p-terms" class="page">
+  <div class="legal-wrap">
+    <span class="lbl">Legal</span>
+    <h1>Terms of Use</h1>
+    <p class="legal-eff">Effective Date: 2026 &nbsp;·&nbsp; Seven Kilo Enterprises LLC &nbsp;·&nbsp; info@korrvox.com</p>
+    <div class="hi-grid">
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">Personal, non-commercial use</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">One-time purchase, no hidden fees</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">KJV and ASV are public domain</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">You own all content you create</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">Refunds via Apple's refund policy</p></div>
+      <div class="hi-item"><span class="hi-check">✓</span><p class="hi-text">App provided as-is</p></div>
+    </div>
+    <div class="legal-body">
+      <h3>License</h3>
+      <p>Seven Kilo Enterprises LLC grants you a limited, non-exclusive, non-transferable license to use Korrvox on your Apple device for personal, non-commercial purposes.</p>
+
+```
+  <h3>Bible Content</h3>
+  <p>The King James Version (KJV) — first published 1611 — and the American Standard Version (ASV) — published 1901 — are in the public domain. Both are sourced from public domain databases. Other translations entered manually by users are the user's responsibility with respect to copyright compliance.</p>
+
+  <h3>User Content</h3>
+  <p>You retain full ownership of any content you create in Korrvox, including memory cards and voice recordings. We have no access to this content.</p>
+
+  <h3>Prohibited Use</h3>
+  <p>You may not reverse engineer, decompile, or modify the app. You may not use Korrvox for any unlawful purpose. Commercial redistribution is not permitted.</p>
+
+  <h3>Purchases &amp; Refunds</h3>
+  <p>Korrvox is a one-time purchase with no subscriptions or recurring fees. All purchases are processed by Apple through the App Store. Refunds are subject to Apple's refund policy.</p>
+
+  <h3>Disclaimer of Warranties</h3>
+  <p>Korrvox is provided "as is" without warranties of any kind. We do not guarantee uninterrupted or error-free operation and are not liable for any loss of data.</p>
+
+  <h3>Limitation of Liability</h3>
+  <p>Seven Kilo Enterprises LLC shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the app.</p>
+
+  <h3>Trademarks</h3>
+  <p>Korrvox is a trademark of Seven Kilo Enterprises LLC. Apple, iPhone, iPad, iCloud, and App Store are trademarks of Apple Inc. Use of these marks does not imply endorsement.</p>
+
+  <h3>Governing Law</h3>
+  <p>These Terms are governed by the laws of the United States.</p>
+
+  <h3>Contact</h3>
+  <p><a href="mailto:info@korrvox.com">info@korrvox.com</a> &nbsp;·&nbsp; <a onclick="go('contact')" style="cursor:pointer">Contact form →</a></p>
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     CONTACT
+══════════════════════════════════════ -->
+
+<div id="p-contact" class="page">
+  <div class="contact-wrap">
+    <span class="lbl">Get in Touch</span>
+    <h1>We'd love to hear from you.</h1>
+    <p class="csub">Bug report, feature idea, or just want to say something? We're a small team and we read every message.</p>
+
+```
+<div class="cform" id="cform">
+  <div><label>Name</label><input type="text" id="cf-name" placeholder="Your name"/></div>
+  <div><label>Email</label><input type="email" id="cf-email" placeholder="you@example.com"/></div>
+  <div>
+    <label>Topic</label>
+    <select id="cf-subj">
+      <option value="" disabled selected>Select a topic…</option>
+      <option value="support">App Support</option>
+      <option value="bug">Bug Report</option>
+      <option value="feature">Feature Request</option>
+      <option value="other">General Question</option>
+    </select>
+  </div>
+  <div><label>Message</label><textarea id="cf-msg" placeholder="Tell us what's on your mind…"></textarea></div>
+  <button class="send-btn" onclick="sendForm()">Send Message</button>
+</div>
+<div class="form-success" id="form-ok">
+  Message received.<br>Thank you — we'll be in touch soon.
+</div>
+
+<div class="contact-detail">
+  <strong>Seven Kilo Enterprises LLC</strong><br>
+  <a href="mailto:info@korrvox.com">info@korrvox.com</a><br>
+  korrvox.com
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<script>
+var PAGES = ['home','features','how','about','privacy','terms','contact'];
+
+function go(id) {
+  if (PAGES.indexOf(id) === -1) id = 'home';
+  PAGES.forEach(function(p) {
+    var el = document.getElementById('p-' + p);
+    if (el) el.classList.toggle('active', p === id);
+    var nl = document.getElementById('nl-' + p);
+    if (nl) nl.classList.toggle('active', p === id);
+    var mn = document.getElementById('mn-' + p);
+    if (mn) mn.classList.toggle('active', p === id);
+  });
+  window.scrollTo(0, 0);
+  closeMenu();
+  try { history.pushState(null, '', '#' + id); } catch(e) {}
+}
+
+window.addEventListener('popstate', function() {
+  var h = location.hash.replace('#', '') || 'home';
+  go(PAGES.indexOf(h) !== -1 ? h : 'home');
+});
+
+(function() {
+  var h = location.hash.replace('#', '');
+  go(PAGES.indexOf(h) !== -1 ? h : 'home');
+})();
+
+function toggleMenu() {
+  var menu = document.getElementById('mob');
+  var btn  = document.getElementById('ham');
+  var open = menu.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+function closeMenu() {
+  document.getElementById('mob').classList.remove('open');
+  document.getElementById('ham').classList.remove('open');
+}
+
+function sendForm() {
+  var n = document.getElementById('cf-name').value.trim();
+  var e = document.getElementById('cf-email').value.trim();
+  var m = document.getElementById('cf-msg').value.trim();
+  if (!n || !e || !m) { alert('Please fill in your name, email, and message.'); return; }
+  document.getElementById('cform').style.display = 'none';
+  document.getElementById('form-ok').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
+      </div>
+      <div><label for="cf-msg">Message</label><textarea id="cf-msg" placeholder="Tell us what's on your mind…"></textarea></div>
+      <button class="csend" onclick="sendForm()">Send Message</button>
+    </div>
+    <div class="form-success" id="form-ok">
+      Message received.<br>Thank you — we'll be in touch soon.
+    </div>
+
+```
+<div class="contact-detail">
+  <strong>Seven Kilo Enterprises LLC</strong><br>
+  <a href="mailto:info@korrvox.com">info@korrvox.com</a><br>
+  korrvox.com
+</div>
+```
+
+  </div>
+
+  <footer>
+    <div><div class="footer-logo">KORRVOX</div><div class="footer-sub">hide it in your heart</div></div>
+    <nav class="footer-nav">
+      <a onclick="go('home')">Home</a><a onclick="go('features')">Features</a>
+      <a onclick="go('how')">How It Works</a><a onclick="go('about')">About</a>
+      <a onclick="go('privacy')">Privacy</a><a onclick="go('terms')">Terms</a>
+      <a onclick="go('contact')">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 Seven Kilo Enterprises LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<script>
+var PAGES = ['home','features','how','about','privacy','terms','contact'];
+
+function go(id) {
+  if (PAGES.indexOf(id) === -1) id = 'home';
+  PAGES.forEach(function(p) {
+    var el = document.getElementById('p-' + p);
+    if (el) el.classList.toggle('active', p === id);
+    var nl = document.getElementById('nl-' + p);
+    if (nl) nl.classList.toggle('active', p === id);
+    var mn = document.getElementById('mn-' + p);
+    if (mn) mn.classList.toggle('active', p === id);
+  });
+  window.scrollTo(0, 0);
+  closeMenu();
+  try { history.pushState(null, '', '#' + id); } catch(e) {}
+}
+
+window.addEventListener('popstate', function() {
+  var h = location.hash.replace('#', '') || 'home';
+  go(PAGES.indexOf(h) !== -1 ? h : 'home');
+});
+
+(function() {
+  var h = location.hash.replace('#', '');
+  go(PAGES.indexOf(h) !== -1 ? h : 'home');
+})();
+
+function toggleMenu() {
+  var d = document.getElementById('drawer');
+  var b = document.getElementById('ham');
+  var open = d.classList.toggle('open');
+  b.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('ham').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function sendForm() {
+  var n = document.getElementById('cf-name').value.trim();
+  var e = document.getElementById('cf-email').value.trim();
+  var m = document.getElementById('cf-msg').value.trim();
+  if (!n || !e || !m) { alert('Please fill in your name, email, and message.'); return; }
+  document.getElementById('cform').style.display = 'none';
+  document.getElementById('form-ok').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
